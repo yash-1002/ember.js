@@ -1,6 +1,7 @@
 import { EMBER_METAL_TRACKED_PROPERTIES } from '@ember/canary-features';
-import { Object as EmberObject } from '@ember/-internals/runtime';
+import { Object as EmberObject, ArrayProxy, PromiseProxyMixin } from '@ember/-internals/runtime';
 import { tracked, nativeDescDecorator as descriptor } from '@ember/-internals/metal';
+import { Promise } from 'rsvp';
 import { moduleFor, RenderingTestCase, strip, runTask } from 'internal-test-helpers';
 import GlimmerishComponent from '../../utils/glimmerish-component';
 import { Component } from '../../utils/helpers';
@@ -42,6 +43,27 @@ if (EMBER_METAL_TRACKED_PROPERTIES) {
 
         runTask(() => this.context.set('first', 'max'));
         this.assertText('max jackson | max jackson');
+      }
+
+      '@test returning new promise array proxies does not cause perpetual rerenders'() {
+        let PromiseArray = ArrayProxy.extend(PromiseProxyMixin);
+
+        class LoaderComponent extends GlimmerishComponent {
+          get data() {
+            return PromiseArray.create({
+              promise: Promise.resolve([1, 2, 3]),
+            });
+          }
+        }
+
+        this.registerComponent('loader', {
+          ComponentClass: LoaderComponent,
+          template: '{{#each this.data as |item|}}{{item}}{{/each}}',
+        });
+
+        this.render('<Loader/>');
+
+        this.assertText('123');
       }
 
       '@test tracked properties that are uninitialized do not throw an error'() {
