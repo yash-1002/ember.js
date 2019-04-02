@@ -103,10 +103,10 @@ export function get(obj: object, keyName: string): any {
   let value: any;
 
   if (isObjectLike) {
-    if (EMBER_METAL_TRACKED_PROPERTIES) {
-      let tracker = getCurrentTracker();
-      if (tracker) tracker.add(tagForProperty(obj, keyName));
-    }
+    // if (EMBER_METAL_TRACKED_PROPERTIES) {
+    //   let tracker = getCurrentTracker();
+    //   if (tracker) tracker.add(tagForProperty(obj, keyName));
+    // }
 
     let descriptor = descriptorForProperty(obj, keyName);
     if (descriptor !== undefined) {
