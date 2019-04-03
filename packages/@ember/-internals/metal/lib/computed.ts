@@ -294,9 +294,9 @@ export class ComputedProperty extends ComputedDescriptor {
       this._property(...(args as string[]));
     }
 
-    if (EMBER_METAL_TRACKED_PROPERTIES) {
-      this._auto = false;
-    }
+    // if (EMBER_METAL_TRACKED_PROPERTIES) {
+    //   this._auto = false;
+    // }
   }
 
   setup(obj: object, keyName: string, propertyDesc: DecoratorPropertyDescriptor, meta: Meta) {
@@ -519,45 +519,45 @@ export class ComputedProperty extends ComputedDescriptor {
     let cache = getCacheFor(obj);
     let propertyTag;
 
-    if (EMBER_METAL_TRACKED_PROPERTIES) {
-      propertyTag = tagForProperty(obj, keyName);
+    // if (EMBER_METAL_TRACKED_PROPERTIES) {
+    //   propertyTag = tagForProperty(obj, keyName);
 
-      if (cache.has(keyName)) {
-        // special-case for computed with no dependent keys used to
-        // trigger cacheable behavior.
-        if (!this._auto && (!this._dependentKeys || this._dependentKeys.length === 0)) {
-          return cache.get(keyName);
-        }
+    //   if (cache.has(keyName)) {
+    //     // special-case for computed with no dependent keys used to
+    //     // trigger cacheable behavior.
+    //     if (!this._auto && (!this._dependentKeys || this._dependentKeys.length === 0)) {
+    //       return cache.get(keyName);
+    //     }
 
-        let lastRevision = getLastRevisionFor(obj, keyName);
-        if (propertyTag.validate(lastRevision)) {
-          return cache.get(keyName);
-        }
-      }
-    } else {
-      if (cache.has(keyName)) {
-        return cache.get(keyName);
-      }
+    //     let lastRevision = getLastRevisionFor(obj, keyName);
+    //     if (propertyTag.validate(lastRevision)) {
+    //       return cache.get(keyName);
+    //     }
+    //   }
+    // } else {
+    if (cache.has(keyName)) {
+      return cache.get(keyName);
     }
+    // }
 
     let parent: any;
     let tracker: any;
 
-    if (EMBER_METAL_TRACKED_PROPERTIES) {
-      parent = getCurrentTracker();
-      tracker = setCurrentTracker();
-    }
+    // if (EMBER_METAL_TRACKED_PROPERTIES) {
+    //   parent = getCurrentTracker();
+    //   tracker = setCurrentTracker();
+    // }
 
     let ret = this._getter!.call(obj, keyName);
 
-    if (EMBER_METAL_TRACKED_PROPERTIES) {
-      setCurrentTracker(parent!);
-      let tag = tracker!.combine();
-      if (parent) parent.add(tag);
+    // if (EMBER_METAL_TRACKED_PROPERTIES) {
+    //   setCurrentTracker(parent!);
+    //   let tag = tracker!.combine();
+    //   if (parent) parent.add(tag);
 
-      update(propertyTag as any, tag);
-      setLastRevisionFor(obj, keyName, (propertyTag as any).value());
-    }
+    //   update(propertyTag as any, tag);
+    //   setLastRevisionFor(obj, keyName, (propertyTag as any).value());
+    // }
 
     cache.set(keyName, ret);
 
@@ -645,10 +645,10 @@ export class ComputedProperty extends ComputedDescriptor {
 
     notifyPropertyChange(obj, keyName, meta);
 
-    if (EMBER_METAL_TRACKED_PROPERTIES) {
-      let propertyTag = tagForProperty(obj, keyName);
-      setLastRevisionFor(obj, keyName, propertyTag.value());
-    }
+    // if (EMBER_METAL_TRACKED_PROPERTIES) {
+    //   let propertyTag = tagForProperty(obj, keyName);
+    //   setLastRevisionFor(obj, keyName, propertyTag.value());
+    // }
 
     return ret;
   }
