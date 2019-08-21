@@ -1,4 +1,5 @@
 import { FUNCTION_PROTOTYPE_EXTENSIONS } from '@ember/deprecated-features';
+import { DEBUG } from '@glimmer/env';
 import global from './global';
 
 /**
@@ -67,6 +68,15 @@ export const ENV = {
   RAISE_ON_DEPRECATION: false,
 
   STRUCTURED_PROFILE: false,
+
+  /**
+    @property _DEBUG_RENDER_TREE
+    @for EmberENV
+    @type Boolean
+    @default `true` in debug, `false` in production
+    @private
+  */
+  _DEBUG_RENDER_TREE: DEBUG,
 
   /**
     Whether to insert a `<div class="ember-view" />` wrapper around the

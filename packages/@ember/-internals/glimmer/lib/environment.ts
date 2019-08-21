@@ -13,6 +13,7 @@ import { Destroyable, Opaque } from '@glimmer/util';
 import DebugStack from './utils/debug-stack';
 import createIterable from './utils/iterable';
 import { ConditionalReference, UpdatableReference } from './utils/references';
+import RenderTree from './utils/render-tree';
 import { isHTMLSafe } from './utils/string';
 
 import installPlatformSpecificProtocolForURL from './protocol-for-url';
@@ -34,6 +35,7 @@ export default class Environment extends GlimmerEnvironment {
   public destroyedComponents: Destroyable[];
 
   public debugStack: typeof DebugStack;
+  public renderTree: RenderTree = new RenderTree();
   public inTransaction = false;
 
   constructor(injections: any) {
@@ -47,6 +49,7 @@ export default class Environment extends GlimmerEnvironment {
     installPlatformSpecificProtocolForURL(this);
 
     if (DEBUG) {
+      // TODO: most places that has debugStack calls are places we need to add renderTree calls
       this.debugStack = new DebugStack();
     }
   }
